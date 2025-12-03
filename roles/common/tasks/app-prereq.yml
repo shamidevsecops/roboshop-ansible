@@ -7,11 +7,6 @@
 #cd /app
 #unzip /tmp/${component}.zip
 
-- name: Copy component service file
-  ansible.builtin.copy:
-    src: "{{ component }}.service"
-    dest: /etc/systemd/system/{{component}}.service
-
 - name: Add application user
   ansible.builtin.user:
     name: roboshop
