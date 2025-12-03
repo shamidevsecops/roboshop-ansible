@@ -1,7 +1,19 @@
+#  source common.sh
+#    component=catalogue
+#    NODEJS
+#    dnf install mongodb-mongosh -y
+#    mongosh --host mongodb-dev.shamidevops.online </app/db/master-data.js
+
+
 - name: Load NodeJS
   ansible.builtin.import_role:
     name: common
     tasks_from: nodejs
+
+- name: Install Mongo shell
+  ansible.builtin.dnf:
+    name: mongodb-mongosh
+    state: installed
 
 - name: Copy MongoDB repo file
   ansible.builtin.copy:
