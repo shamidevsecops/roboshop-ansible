@@ -11,7 +11,7 @@
 - name: Install Redis
   ansible.builtin.dnf:
     name: redis
-    state: Installed
+    state: installed
 
 - name: Update Listen Address
   ansible.builtin.replace:
