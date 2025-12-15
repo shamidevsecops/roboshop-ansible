@@ -13,9 +13,9 @@
 #    done
 
 - name: Load Maven
-  ansible.builtin.import_role:
+  ansible.builtin.include_role:
     name: common
-    tasks_from: maven
+    tasks_from: maven.yml
 
 - name: Install MySQL Client
   ansible.builtin.dnf:

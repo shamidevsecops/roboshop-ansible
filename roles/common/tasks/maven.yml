@@ -14,9 +14,9 @@
     state: installed
 
 - name: Load App Pre-Req
-  ansible.builtin.import_role:
+  ansible.builtin.include_role:
     name: common
-    tasks_from: app-prereq
+    tasks_from: app-prereq.yml
 
 - name: install Maven Dependencies
   ansible.builtin.shell: mvn clean package ; mv target/{{component}}-1.0.jar {{component}}.jar
@@ -24,6 +24,6 @@
     chdir: /app
 
 - name: Load SystemD Service
-  ansible.builtin.import_role:
+  ansible.builtin.include_role:
     name: common
-    tasks_from: systemd
+    tasks_from: systemd.yml
