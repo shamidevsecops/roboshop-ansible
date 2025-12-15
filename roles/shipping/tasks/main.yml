@@ -14,7 +14,7 @@
 
 - name: Install MySQL Client
   ansible.builtin.dnf:
-    name: mysql-community-client
+    name: mysql
     state: installed
 
 - name: Load Schema
