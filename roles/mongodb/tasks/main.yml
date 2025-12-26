@@ -9,7 +9,7 @@
     src: mongo.repo
     dest: /etc/yum.repos.d/mongo.repo
 
-- name: Install MagngoDB Server
+- name: Install MangoDB Server
   ansible.builtin.dnf:
     name: mongodb-org
     state: installed

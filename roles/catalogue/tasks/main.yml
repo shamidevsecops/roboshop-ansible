@@ -10,15 +10,16 @@
     name: common
     tasks_from: nodejs
 
-- name: Install Mongo shell
-  ansible.builtin.dnf:
-    name: mongodb-mongosh
-    state: installed
-
 - name: Copy MongoDB repo file
   ansible.builtin.copy:
     src: mongo.repo
     dest: /etc/yum.repos.d/mongo.repo
 
+- name: Install Mongo shell
+  ansible.builtin.dnf:
+    name: mongodb-mongosh
+    state: installed
+
 - name: Load Schema
-  ansible.builtin.shell: mongosh --host mongodb-dev.shamidevops.online </app/db/master-data.js
+  ansible.builtin.shell:
+    mongosh --host mongodb-dev.shamidevops.online </app/db/master-data.js
