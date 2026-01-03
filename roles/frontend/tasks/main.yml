@@ -1,50 +1,66 @@
-#dnf module disable nginx -y
-#dnf module enable nginx:1.24 -y
-#dnf install nginx -y
-#cp nginx.conf /etc/nginx/nginx.conf
-#rm -rf /usr/share/nginx/html/*
-#curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
-#cd /usr/share/nginx/html
-#unzip /tmp/frontend.zip
-#systemctl enable nginx
-#systemctl restart nginx
--
-- name: disable nginx default version
-  ansible.builtin.shell: dnf module disable nginx -y
-
-- name: Enable nginx version 1.24
-  ansible.builtin.shell: dnf module enable nginx:1.24 -y
-
-- name: Install nginx
-  ansible.builtin.dnf:
-      name: nginx
-      state: installed
-
-- name: Copy nginx config
-  ansible.builtin.template:
-    src: nginx.conf
-    dest: /etc/nginx/nginx.conf
-
-- name: Remove nginx default content
-  ansible.builtin.file:
-    path: /usr/share/nginx/html/
-    state:  absent
-
-- name: Create nginx http directory
-  ansible.builtin.file:
-    path: /usr/share/nginx/html/
-    state: directory
-
-- name: Download nginx content
-  ansible.builtin.unarchive:
-    src: https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
-    dest: /usr/share/nginx/html/
-    remote_src: yes
-
-- name: Start nginx
-  ansible.builtin.systemd_service:
-    name: nginx
-    state: restarted
+# - name: Disable nginx default version
+#   ansible.builtin.shell: dnf module disable nginx -y
+#
+# - name: Enable nginx version 1.24
+#   ansible.builtin.shell: dnf module disable nginx -y
+#
+# - name: Install nginx
+#   ansible.builtin.dnf:
+#     name: nginx
+#     state: installed
+#
+# - name: Copy nginx config
+#   ansible.builtin.template:
+#     src: nginx.conf
+#     dest: /etc/nginx/nginx.conf
+#
+# - name: Remove nginx default content
+#   ansible.builtin.file:
+#     path: /usr/share/nginx/html/
+#     state: absent
+#
+# - name: Create nginx http directory
+#   ansible.builtin.file:
+#     path: /usr/share/nginx/html/
+#     state: directory
+#
+# - name: Download nginx content
+#   ansible.builtin.unarchive:
+#     src: https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
+#     dest: /usr/share/nginx/html/
+#     remote_src: yes
+#
+# - name: Start nginx
+#   ansible.builtin.systemd_service:
+#     name: nginx
+#     state: restarted
+#     enabled: yes
 
 
+- name: Load common main
+  ansible.builtin.import_role:
+    name: common
+
+- name: Load Docker
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: docker
+
+- name: Launch Docker Container
+  community.docker.docker_container:
+    name: frontend
+    image: public.ecr.aws/w8x4g9h7/roboshop-v3/frontend
+    ports:
+      - "80:80"
+    env:
+      CATALOGUE_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/frontend:CATALOGUE_HOST token={{ token }} url=http://vault-internal.shamidevops.online:8200') }}"
+      CATALOGUE_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/frontend:CATALOGUE_PORT token={{ token }} url=http://vault-internal.shamidevops.online:8200') }}"
+      USER_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/frontend:USER_HOST token={{ token }} url=http://vault-internal.shamidevops.online:8200') }}"
+      USER_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/frontend:USER_PORT token={{ token }} url=http://vault-internal.shamidevops.online:8200') }}"
+      CART_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/frontend:CART_HOST token={{ token }} url=http://vault-internal.shamidevops.online:8200') }}"
+      CART_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/frontend:CART_PORT token={{ token }} url=http://vault-internal.shamidevops.online:8200') }}"
+      SHIPPING_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/frontend:SHIPPING_HOST token={{ token }} url=http://vault-internal.shamidevops.online:8200') }}"
+      SHIPPING_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/frontend:SHIPPING_PORT token={{ token }} url=http://vault-internal.shamidevops.online:8200') }}"
+      PAYMENT_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/frontend:PAYMENT_HOST token={{ token }} url=http://vault-internal.shamidevops.online:8200') }}"
+      PAYMENT_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/frontend:PAYMENT_PORT token={{ token }} url=http://vault-internal.shamidevops.online:8200') }}"
 
