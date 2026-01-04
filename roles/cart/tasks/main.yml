@@ -19,7 +19,7 @@
     ports:
       - "8080:8080"
     env:
-      CATALOGUE_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/cart:CATALOGUE_HOST token={{ token }} url=http://vault-internal.shamidevops.online:8200') }}"
-      CATALOGUE_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/cart:CATALOGUE_PORT token={{ token }} url=http://vault-internal.shamidevops.online:8200') }}"
-      REDIS_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/cart:REDIS_HOST token={{ token }} url=http://vault-internal.shamidevops.online:8200') }}"
+      CATALOGUE_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/cart:CATALOGUE_HOST token={{ token }} url=http://vault-internal.shamidevops.online:8200')}}"
+      CATALOGUE_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/cart:CATALOGUE_PORT token={{ token }} url=http://vault-internal.shamidevops.online:8200') | string }}"
+      REDIS_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=roboshop-{{env}}/data/cart:REDIS_HOST token={{ token }} url=http://vault-internal.shamidevops.online:8200')}}"
 
